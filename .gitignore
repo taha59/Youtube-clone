@@ -31,4 +31,4 @@ build/
 
 ### VS Code ###
 .vscode/
-frontend/youtube-clone-ui/node/node.exe
+frontend/youtube-clone-ui/node
