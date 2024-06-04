@@ -9,7 +9,7 @@
                 <mat-label>Title</mat-label>
                 <input matInput [formControl]="title" required>
             </mat-form-field>
-            
+
             <mat-form-field>
                 <mat-label>Description</mat-label>
                 <input matInput [formControl]="description" required>
@@ -22,7 +22,7 @@
                     <mat-option value="PRIVATE">PRIVATE</mat-option>
                 </mat-select>
             </mat-form-field>
-            
+
             <mat-form-field class="example-chip-list">
                 <mat-label>Tags</mat-label>
                 <mat-chip-grid #chipGrid aria-label="Enter tags">
@@ -44,9 +44,32 @@
                          [matChipInputAddOnBlur]="addOnBlur"
                          (matChipInputTokenEnd)="add($event)"/>
                 </mat-chip-grid>
-            </mat-form-field>
-            
+              </mat-form-field>
+
+            <div>
+                <label for="inputGroupFile01">Upload Thumbnail
+                    <div class = "custom-file">
+                        <input type = "file" class="custom-file-input" id = "inputGroupFile01"
+                            aria-describedby="inputGroupFileAddOn01" (change) = "onFileSelected($event)"> 
+                    </div>
+               
+
+                    <br/>
+                    <div *ngIf="fileSelected">
+                        <div>
+                            <p>Selected File: {{selectedFileName}}</p>
+                        </div>
+                        <hr>
+                        <div>
+                            <button mat-raised-button color="primary" type="submit" (click) = "onUpload()">Upload</button>
+                        </div>
+                    </div>
+                    <br>
+                </label>
+            </div>
+
             <button type = "submit" mat-raised-button color = "primary"> Save</button>
+
         </form>
     </div>
     <div fxFlex = "30%">
