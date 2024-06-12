@@ -32,4 +32,11 @@ public class VideoController {
     public VideoDto editVideoMetadata(@RequestBody VideoDto videoDto){
         return videoService.editVideo(videoDto);
     }
+
+    @GetMapping("/{videoId}")
+    @ResponseStatus(HttpStatus.OK)
+    public VideoDto getVideo(@PathVariable String videoId) {
+
+        return videoService.getVideoDetails(videoId);
+    }
 }

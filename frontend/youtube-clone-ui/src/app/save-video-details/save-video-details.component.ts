@@ -6,6 +6,7 @@ import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { ActivatedRoute } from '@angular/router';
 import { VideoService } from '../video.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { VideoDto } from '../video-dto';
 
 @Component({
   selector: 'app-save-video-details',
@@ -16,7 +17,7 @@ export class SaveVideoDetailsComponent implements OnInit{
 
   saveVideoDetailsForm: FormGroup;
   title:FormControl = new FormControl('');
-  videoStatus:FormControl = new FormControl('');
+  videoStatus:FormControl = new FormControl('PUBLIC');
   description:FormControl = new FormControl('');
 
   addOnBlur = true;
@@ -26,12 +27,21 @@ export class SaveVideoDetailsComponent implements OnInit{
   selectedFileName = ''
   videoId = ''
   fileSelected : boolean = false
+  videoUrl: string
+  thumbnailUrl : string
 
   announcer = inject(LiveAnnouncer);
 
   constructor(private activatedRoute: ActivatedRoute, private videoService: VideoService
     ,private matSnackBar: MatSnackBar
   ){
+    this.videoId = this.activatedRoute.snapshot.params['videoId']
+    this.videoService.getVideo(this.videoId).subscribe(data =>
+      {
+        this.videoUrl = data.videoUrl
+      }
+    )
+
     this.saveVideoDetailsForm = new FormGroup(
       {
         title: this.title,
@@ -39,7 +49,7 @@ export class SaveVideoDetailsComponent implements OnInit{
         videoStatus: this.videoStatus,
       }
     )
-    this.videoId = this.activatedRoute.snapshot.params['videoId']
+  
   } 
   ngOnInit(): void {}
 
@@ -93,7 +103,28 @@ export class SaveVideoDetailsComponent implements OnInit{
     .subscribe(data => {
       console.log(data)
       this.matSnackBar.open("Thumbnail Uploaded!", "OK")
+      this.thumbnailUrl = data
       //show if function is working
     })
   }
+
+  editVideoMetaData(){
+
+    const videoDto: VideoDto = {
+      id: this.videoId,
+      title: this.title.value,
+      description: this.description.value,
+      tags: this.tags,
+      videoUrl: this.videoUrl,
+      videoStatus: this.videoStatus.value,
+      thumbnailUrl: this.thumbnailUrl
+    };
+
+    //https call to backend edit video metadata. takes videodto as input and reponse is videoDto
+    this.videoService.editVideoMetadata(videoDto).subscribe(data => {
+      console.log(data)
+      this.matSnackBar.open("Video Details edited Successfully!!", "OK")
+    })
+  }
+
 }

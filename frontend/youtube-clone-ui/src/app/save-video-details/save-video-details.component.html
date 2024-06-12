@@ -20,6 +20,7 @@
                 <mat-select [formControl] = "videoStatus">
                     <mat-option value="PUBLIC">PUBLIC</mat-option>
                     <mat-option value="PRIVATE">PRIVATE</mat-option>
+                    <mat-option value="UNLISTED">UNLISTED</mat-option>
                 </mat-select>
             </mat-form-field>
 
@@ -68,12 +69,12 @@
                 </label>
             </div>
 
-            <button type = "submit" mat-raised-button color = "primary"> Save</button>
+            <button type = "submit" mat-raised-button color = "primary" (click) = "editVideoMetaData()"> Save</button>
 
         </form>
     </div>
     <div fxFlex = "30%">
-       Video Player
+        <app-video-player [videoUrl]="videoUrl"> </app-video-player>
     </div>
     <div fxFlex = "20%"> Hi </div>
 
