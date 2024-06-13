@@ -5,6 +5,9 @@
     <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
         <mat-icon>video_call</mat-icon>
     </button>
+    
+    <button *ngIf ="isAuthenticated" mat-raised-button color="primary" type="submit" (click) = "logout()">Logout</button>
+  
     <button *ngIf ="isAuthenticated; else noAuth" mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
         <mat-icon>account_circle</mat-icon>
     </button>
@@ -12,6 +15,7 @@
     <ng-template #noAuth>
         <button mat-raised-button (click) = "login()">Login</button>
     </ng-template>
-    
+
+
     </mat-toolbar-row>
 </mat-toolbar>

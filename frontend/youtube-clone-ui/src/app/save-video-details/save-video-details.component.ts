@@ -39,6 +39,7 @@ export class SaveVideoDetailsComponent implements OnInit{
     this.videoService.getVideo(this.videoId).subscribe(data =>
       {
         this.videoUrl = data.videoUrl
+        this.thumbnailUrl = data.thumbnailUrl
       }
     )
 
@@ -103,8 +104,6 @@ export class SaveVideoDetailsComponent implements OnInit{
     .subscribe(data => {
       console.log(data)
       this.matSnackBar.open("Thumbnail Uploaded!", "OK")
-      this.thumbnailUrl = data
-      //show if function is working
     })
   }
 
