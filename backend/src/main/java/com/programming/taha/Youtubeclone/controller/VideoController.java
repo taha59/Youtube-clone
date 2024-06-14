@@ -2,6 +2,7 @@ package com.programming.taha.Youtubeclone.controller;
 
 import com.programming.taha.Youtubeclone.dto.UploadVideoResponse;
 import com.programming.taha.Youtubeclone.dto.VideoDto;
+import com.programming.taha.Youtubeclone.service.UserService;
 import com.programming.taha.Youtubeclone.service.VideoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class VideoController {
 
     private final VideoService videoService;
+    private final UserService userService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -37,6 +39,13 @@ public class VideoController {
     @ResponseStatus(HttpStatus.OK)
     public VideoDto getVideo(@PathVariable String videoId) {
 
+        userService.getCurrentUser();
         return videoService.getVideoDetails(videoId);
+    }
+
+    @PostMapping("/{videoId}/like")
+    @ResponseStatus(HttpStatus.OK)
+    public VideoDto likeVideo(@PathVariable String videoId){
+        return videoService.likeVideo(videoId);
     }
 }

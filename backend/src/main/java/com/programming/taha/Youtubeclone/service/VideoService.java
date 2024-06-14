@@ -5,6 +5,7 @@ import com.programming.taha.Youtubeclone.dto.VideoDto;
 import com.programming.taha.Youtubeclone.model.Video;
 import com.programming.taha.Youtubeclone.repository.VideoRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class VideoService {
 
     private final S3Service s3Service;
+    private final UserService userService;
     private final VideoRepository videoRepository;
 
     public UploadVideoResponse uploadVideo(MultipartFile multipartFile) {
@@ -71,4 +73,17 @@ public class VideoService {
         return videoDto;
     }
 
+    /*method for when the like button is pressed*/
+    public VideoDto likeVideo(String videoId) {
+        Video video = getVideoById(videoId);
+
+        if (userService.ifLikedVideo(videoId)){
+            video.decrementLikes();
+            userService.removeFromLikedVideos(videoId);
+        }
+        video.incrementLikes();
+        userService.addToLikedVideos(videoId);
+
+        return null;
+    }
 }
