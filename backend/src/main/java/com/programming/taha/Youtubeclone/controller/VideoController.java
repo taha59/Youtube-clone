@@ -17,35 +17,45 @@ public class VideoController {
     private final VideoService videoService;
     private final UserService userService;
 
+    //endpoint for uploading a video
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UploadVideoResponse uploadVideo(@RequestParam("file") MultipartFile file){
         return videoService.uploadVideo(file);
     }
 
+    //endpoint for uploading thumbnail
     @PostMapping("/thumbnail")
     @ResponseStatus(HttpStatus.CREATED)
     public String uploadThumbnail(@RequestParam("file") MultipartFile file, @RequestParam("videoId") String videoId){
         return videoService.uploadThumbnail(file, videoId);
     }
 
+    //endpoint for editing video
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
     public VideoDto editVideoMetadata(@RequestBody VideoDto videoDto){
         return videoService.editVideo(videoDto);
     }
 
+    //endpoint for getting metadata of a particular video
     @GetMapping("/{videoId}")
     @ResponseStatus(HttpStatus.OK)
     public VideoDto getVideo(@PathVariable String videoId) {
-
-        userService.getCurrentUser();
         return videoService.getVideoDetails(videoId);
     }
 
+    //endpoint for liking a video
     @PostMapping("/{videoId}/like")
     @ResponseStatus(HttpStatus.OK)
     public VideoDto likeVideo(@PathVariable String videoId){
         return videoService.likeVideo(videoId);
+    }
+
+    //endpoint for disliking a video
+    @PostMapping("/{videoId}/dislike")
+    @ResponseStatus(HttpStatus.OK)
+    public VideoDto dislikeVideo(@PathVariable String videoId){
+        return videoService.dislikeVideo(videoId);
     }
 }

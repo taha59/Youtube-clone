@@ -16,6 +16,7 @@ public class UserController {
 
     private final UserRegistrationService userRegistrationService;
 
+    //endpoint for registering a user
     @GetMapping("/register")
     public String register(@AuthenticationPrincipal Jwt jwt){
 

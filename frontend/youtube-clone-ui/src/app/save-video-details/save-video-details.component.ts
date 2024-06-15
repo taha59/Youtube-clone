@@ -103,6 +103,8 @@ export class SaveVideoDetailsComponent implements OnInit{
     this.videoService.uploadThumbnail(this.droppedFile, this.videoId)
     .subscribe(data => {
       console.log(data)
+      
+      this.thumbnailUrl = data
       this.matSnackBar.open("Thumbnail Uploaded!", "OK")
     })
   }
@@ -121,7 +123,7 @@ export class SaveVideoDetailsComponent implements OnInit{
 
     //https call to backend edit video metadata. takes videodto as input and reponse is videoDto
     this.videoService.editVideoMetadata(videoDto).subscribe(data => {
-      console.log(data)
+      console.log("Edited video!!",data)
       this.matSnackBar.open("Video Details edited Successfully!!", "OK")
     })
   }

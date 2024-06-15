@@ -11,15 +11,14 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VideoDto {
-    String id;
+    private String id;
     private String title;
     private String description;
-    private String userId;
-    private Integer likes;
-    private Integer dislikes;
     private Set<String> tags;
     private String videoUrl;
     private VideoStatus videoStatus;
-    private Integer viewCount;
     private String thumbnailUrl;
+    private Integer likeCount;
+    private Integer dislikeCount;
+    private Integer viewCount;
 }

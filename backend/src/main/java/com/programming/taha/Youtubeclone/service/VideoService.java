@@ -30,7 +30,7 @@ public class VideoService {
 
     public VideoDto editVideo(VideoDto videoDto) {
 
-        var savedVideo = getVideoById(videoDto.getId());
+        Video savedVideo = getVideoById(videoDto.getId());
         // change the fields of the saved video
         savedVideo.setTitle(videoDto.getTitle());
         savedVideo.setDescription(videoDto.getDescription());
@@ -58,32 +58,89 @@ public class VideoService {
                 .orElseThrow(() -> new IllegalArgumentException( "Video id Not Found!!" + videoId ));
     }
 
+    //function gets called whenever user requests for video details
     public VideoDto getVideoDetails(String videoId) {
         Video savedVideo = getVideoById(videoId);
 
-        VideoDto videoDto = new VideoDto();
-        videoDto.setVideoUrl(savedVideo.getVideoUrl());
-        videoDto.setThumbnailUrl(savedVideo.getThumbnailUrl());
-        videoDto.setId(savedVideo.getId());
-        videoDto.setTitle(savedVideo.getTitle());
-        videoDto.setDescription(savedVideo.getDescription());
-        videoDto.setTags(savedVideo.getTags());
-        videoDto.setVideoStatus(savedVideo.getVideoStatus());
+        //increase view count
+        increaseViewCount(savedVideo);
+        userService.addToVideoHistory(videoId);
 
-        return videoDto;
+        return setToVideoDto(savedVideo);
+    }
+
+    private void increaseViewCount(Video savedVideo) {
+        savedVideo.incrementViewCount();
+        videoRepository.save(savedVideo);
     }
 
     /*method for when the like button is pressed*/
     public VideoDto likeVideo(String videoId) {
         Video video = getVideoById(videoId);
 
+        //if a user already liked the video
         if (userService.ifLikedVideo(videoId)){
             video.decrementLikes();
             userService.removeFromLikedVideos(videoId);
         }
-        video.incrementLikes();
-        userService.addToLikedVideos(videoId);
+        //if the user already disliked the video
+        else if(userService.ifDislikedVideo(videoId)){
+            video.decrementDislikes();
+            userService.removeFromDislikedVideos(videoId);
+            video.incrementLikes();
+            userService.addToLikedVideos(videoId);
+        }
+        else{
+            video.incrementLikes();
+            userService.addToLikedVideos(videoId);
+        }
 
-        return null;
+        videoRepository.save(video);
+
+        return setToVideoDto(video);
+    }
+
+    //when the dislike button is pressed
+    public VideoDto dislikeVideo(String videoId) {
+        Video video = getVideoById(videoId);
+
+        //if a user already liked the video
+        if (userService.ifLikedVideo(videoId)){
+            video.decrementLikes();
+            userService.removeFromLikedVideos(videoId);
+            video.incrementDisLikes();
+            userService.addToDislikedVideos(videoId);
+        }
+        //if the user already disliked the video
+        else if(userService.ifDislikedVideo(videoId)){
+            video.decrementDislikes();
+            userService.removeFromDislikedVideos(videoId);
+        }
+        else{
+            video.incrementDisLikes();
+            userService.addToDislikedVideos(videoId);
+        }
+
+
+        videoRepository.save(video);
+
+        return setToVideoDto(video);
+    }
+
+    //return videoDto after setting all fields
+    private VideoDto setToVideoDto(Video video){
+        VideoDto videoDto = new VideoDto();
+        videoDto.setVideoUrl(video.getVideoUrl());
+        videoDto.setThumbnailUrl(video.getThumbnailUrl());
+        videoDto.setId(video.getId());
+        videoDto.setTitle(video.getTitle());
+        videoDto.setDescription(video.getDescription());
+        videoDto.setTags(video.getTags());
+        videoDto.setVideoStatus(video.getVideoStatus());
+        videoDto.setLikeCount(video.getLikes().get());
+        videoDto.setDislikeCount(video.getDislikes().get());
+        videoDto.setViewCount(video.getViewCount().get());
+
+        return videoDto;
     }
 }
