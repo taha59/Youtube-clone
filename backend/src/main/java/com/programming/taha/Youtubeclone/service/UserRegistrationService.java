@@ -8,12 +8,14 @@ import com.programming.taha.Youtubeclone.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -23,12 +25,20 @@ public class UserRegistrationService {
 
     private final UserRepository userRepository;
 
-    public void registerUser(String tokenValue){
+    public void registerUser(Jwt principal){
+
+        //if the user sub is already registered
+        if (userRepository.findBySub(principal.getSubject())
+                .isPresent()){
+            throw new IllegalArgumentException
+                    ("User already registered with sub: " + principal.getSubject());
+        }
+
         //retrieve user info from userInfo endpoint
         HttpRequest httpRequest = HttpRequest.newBuilder()
                 .GET()
                 .uri(URI.create(userInfoEndpoint))
-                .setHeader("Authorization", String.format("Bearer %s", tokenValue))
+                .setHeader("Authorization", String.format("Bearer %s", principal.getTokenValue()))
                 .build();
 
         HttpClient httpClient = HttpClient.newBuilder()
@@ -59,5 +69,6 @@ public class UserRegistrationService {
         catch(Exception exception){
             throw new RuntimeException("Exception occurred while registering user", exception);
         }
+
     }
 }

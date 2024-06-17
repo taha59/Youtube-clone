@@ -1,13 +1,16 @@
 package com.programming.taha.Youtubeclone.service;
 
+import com.programming.taha.Youtubeclone.dto.CommentDto;
 import com.programming.taha.Youtubeclone.dto.UploadVideoResponse;
 import com.programming.taha.Youtubeclone.dto.VideoDto;
+import com.programming.taha.Youtubeclone.model.Comment;
 import com.programming.taha.Youtubeclone.model.Video;
 import com.programming.taha.Youtubeclone.repository.VideoRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -62,7 +65,7 @@ public class VideoService {
     public VideoDto getVideoDetails(String videoId) {
         Video savedVideo = getVideoById(videoId);
 
-        //increase view count
+        //increase view count everytime anytime video details are requested
         increaseViewCount(savedVideo);
         userService.addToVideoHistory(videoId);
 
@@ -127,7 +130,31 @@ public class VideoService {
         return setToVideoDto(video);
     }
 
-    //return videoDto after setting all fields
+    public void addComment(String videoId, CommentDto commentDto){
+        Video video = getVideoById(videoId);
+        Comment comment = new Comment();
+
+        comment.setText(commentDto.getCommentText());
+        comment.setAuthorId(commentDto.getAuthorId());
+
+        video.addComment(comment);
+
+        videoRepository.save(video);
+    }
+
+    public List<CommentDto> getAllComments(String videoId) {
+        Video video = getVideoById(videoId);
+
+        List<Comment> commentList = video.getCommentList();
+        return commentList.stream().map(this::setToCommentDto)
+                .toList();
+    }
+
+    public List<VideoDto> getAllVideos() {
+        return videoRepository.findAll().stream().map(this::setToVideoDto).toList();
+    }
+
+    //sets up videoDto
     private VideoDto setToVideoDto(Video video){
         VideoDto videoDto = new VideoDto();
         videoDto.setVideoUrl(video.getVideoUrl());
@@ -142,5 +169,15 @@ public class VideoService {
         videoDto.setViewCount(video.getViewCount().get());
 
         return videoDto;
+    }
+
+    //sets all comment dto fields
+    private CommentDto setToCommentDto(Comment comment){
+        CommentDto commentDto = new CommentDto();
+
+        commentDto.setCommentText(comment.getText());
+        commentDto.setAuthorId(commentDto.getAuthorId());
+
+        return commentDto;
     }
 }
