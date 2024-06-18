@@ -26,6 +26,16 @@ import { VideoPlayerComponent } from './video-player/video-player.component';
 import { AuthConfigModule } from './auth/auth-config.module';
 import { AuthInterceptor } from 'angular-auth-oidc-client';
 import { VideoDetailComponent } from './video-detail/video-detail.component';
+import {MatSidenavModule} from '@angular/material/sidenav';
+import { HomeComponent } from './home/home.component';
+import { HistoryComponent } from './history/history.component';
+import { SubscriptionsComponent } from './subscriptions/subscriptions.component';
+import { LikedVideoComponent } from './liked-video/liked-video.component';
+import { SidebarComponent } from './sidebar/sidebar.component';
+import {MatListModule} from '@angular/material/list'
+import { FeaturedComponent } from './featured/featured.component';
+import { VideoCardComponent } from './video-card/video-card.component';
+import {MatCardModule} from '@angular/material/card'
 
 @NgModule({
   declarations: [
@@ -34,7 +44,14 @@ import { VideoDetailComponent } from './video-detail/video-detail.component';
     HeaderComponent,
     SaveVideoDetailsComponent,
     VideoPlayerComponent,
-    VideoDetailComponent
+    VideoDetailComponent,
+    HomeComponent,
+    HistoryComponent,
+    SubscriptionsComponent,
+    LikedVideoComponent,
+    SidebarComponent,
+    FeaturedComponent,
+    VideoCardComponent,
   ],
   imports: [
     BrowserModule,
@@ -57,7 +74,10 @@ import { VideoDetailComponent } from './video-detail/video-detail.component';
     VgControlsModule,
     VgOverlayPlayModule,
     VgBufferingModule,
-    AuthConfigModule
+    AuthConfigModule,
+    MatSidenavModule,
+    MatListModule,
+    MatCardModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }

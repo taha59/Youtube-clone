@@ -12,9 +12,11 @@ import { AuthModule } from 'angular-auth-oidc-client';
             responseType: 'code',
             silentRenew: true,
             useRefreshToken: true,
+            postLogoutRedirectUri: window.location.origin,
+            // logoutUrl: 'http://localhost:4200',  
             secureRoutes: ['http://localhost:8080'],
             customParamsAuthRequest: {
-                audience: 'http://localhost:8080'
+                audience: 'http://localhost:8080',
             }
         }
       })],

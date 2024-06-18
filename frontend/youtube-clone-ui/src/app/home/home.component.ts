@@ -1,12 +1,18 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
-  standalone: true,
-  imports: [],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
-export class HomeComponent {
-
+export class HomeComponent implements OnInit{
+  private readonly router: Router = inject(Router)
+  constructor(){
+    this.router.navigateByUrl("/featured")
+  }
+  ngOnInit(): void {
+    
+  }
+  
 }

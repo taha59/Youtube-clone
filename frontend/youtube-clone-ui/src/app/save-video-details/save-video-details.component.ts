@@ -118,7 +118,10 @@ export class SaveVideoDetailsComponent implements OnInit{
       tags: this.tags,
       videoUrl: this.videoUrl,
       videoStatus: this.videoStatus.value,
-      thumbnailUrl: this.thumbnailUrl
+      thumbnailUrl: this.thumbnailUrl,
+      likeCount: 0,
+      dislikeCount: 0,
+      viewCount: 0,
     };
 
     //https call to backend edit video metadata. takes videodto as input and reponse is videoDto

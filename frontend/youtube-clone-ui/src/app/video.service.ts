@@ -39,4 +39,8 @@ export class VideoService {
   editVideoMetadata(videoDto: VideoDto): Observable<any>{
     return this.httpClient.put<VideoDto>("http://localhost:8080/api/videos", videoDto);
   }
+
+  getAllVideos(): Observable<Array<VideoDto>>{
+    return this.httpClient.get<Array<VideoDto>>("http://localhost:8080/api/videos")
+  }
 }
