@@ -1,24 +1,51 @@
-
 <div fxLayout="row">
-    <div fxFlex="65%" class = "video-detail">
-        <app-video-player *ngIf="videoUrl" [videoUrl] = "videoUrl"></app-video-player>
-
-        <div class = "mat-title">Title: {{videoTitle}}</div>
+    <div fxFlex="65%" class="video-detail">
+      <div fxLayout="column" fxLayoutGap="8px">
+        <app-video-player *ngIf="videoUrl" [videoUrl]="videoUrl"></app-video-player>
+        <div class="mat-title">Youtube Clone</div>
         <div fxLayout="row">
-            <div fxFlex="50%">
-                <span>Views: {{viewCount}}</span>
-                <!-- <span class = "seperator"></span> -->
-                <span>   18 June 2024</span>
-                <div>Description: {{videoDescription}}</div>
-            </div>
-
-            <div fxFlex="50%">
-
-            </div>
+          <div fxFlex="50%">
+            <span class="view-count">{{viewCount}}</span>
+            <span class="dot"></span>
+            <span class="video-upload-date">June 19 2024</span>
+          </div>
+          <div fxFlex="50%" fxLayoutAlign="end">
+            <span class="like-dislike-section">
+                <button mat-icon-button class="thumbs-up" (click) ="likeVideo()" >
+                  <mat-icon>thumb_up_off_alt</mat-icon>
+                  {{likeCount}}
+                </button>
+                <button mat-icon-button class="thumbs-down" (click) ="dislikeVideo()">
+                  <mat-icon>thumb_down_off_alt</mat-icon>
+                  {{dislikeCount}}
+                </button>
+            </span>
+          </div>
         </div>
+        <mat-divider></mat-divider>
+        <mat-card-header>
+          <div mat-card-avatar class="example-header-image"></div>
+          <mat-card-title>Taha</mat-card-title>
+          <mat-card-subtitle class="subtitles">4.2K Subscribers</mat-card-subtitle>
+          <button *ngIf="isSubscribed" class="subscribe-button" mat-raised-button color="warn" 
+          (click)="subscribeToUser()">SUBSCRIBE
+          </button>
+          <button *ngIf ="isUnsubscribed" class="subscribe-button-clicked" mat-raised-button color="accent"
+          (click)="unsubscribeToUser()">
+            SUBSCRIBED
+          </button>
+        </mat-card-header>
+        <div>{{videoDescription}}</div>
+        <mat-divider></mat-divider>
+        <mat-chip-set>
+            <mat-chip>Spring Boot</mat-chip>
+            <mat-chip>Angular</mat-chip>
+        </mat-chip-set>
+        <mat-divider></mat-divider>
+        <app-comments [videoId] = "videoId"> </app-comments>
+      </div>
     </div>
     <div fxFlex="5%"></div>
-    <div fxFlex="30%">
-        Suggestions Bar
+    <div fxFlex="30%" class="suggestion-bar">
     </div>
-</div>
+  </div>

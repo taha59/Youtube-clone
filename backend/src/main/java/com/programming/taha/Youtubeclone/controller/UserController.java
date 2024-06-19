@@ -24,9 +24,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public String register(@AuthenticationPrincipal Jwt jwt){
 
-        userRegistrationService.registerUser(jwt);
-
-        return "User Registered!";
+        return userRegistrationService.registerUser(jwt);
     }
 
     //endpoint for subscribing to a user

@@ -9,7 +9,8 @@ import { LoginResponse, OidcSecurityService } from 'angular-auth-oidc-client';
 export class AppComponent implements OnInit{
   title = 'youtube-clone-ui';
 
-  constructor(private oidcSecurityService: OidcSecurityService){}
+  constructor(private oidcSecurityService: OidcSecurityService){
+  }
 
   ngOnInit(): void{
     this.oidcSecurityService

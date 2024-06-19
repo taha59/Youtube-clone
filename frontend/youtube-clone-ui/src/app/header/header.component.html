@@ -1,19 +1,18 @@
 <mat-toolbar color="primary">
     <mat-toolbar-row>
-    <span>Youtube Clone</span>
-    <span class="example-spacer"></span>
-    <button mat-icon-button class routerLink = "upload-video">
+      <span>Youtube Clone</span>
+      <span class="example-spacer"></span>
+      <button mat-icon-button class routerLink="/upload-video">
         <mat-icon>video_call</mat-icon>
-    </button>
-    
-    <ng-container *ngIf="isAuthenticated; else noAuth">
-        <button mat-raised-button (click)="logoff()">Log Out</button>
-    </ng-container>
-    
-    <!-- Else block defined with ng-template for when isAuthenticated is true -->
-    <ng-template #noAuth>
+      </button>
+      <button *ngIf="isAuthenticated; else noAuth" [matMenuTriggerFor]="menu" mat-icon-button class>
+        <mat-icon>account_circle</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="logoff()">Logout</button>
+      </mat-menu>
+      <ng-template #noAuth>
         <button mat-raised-button (click)="login()">Login</button>
-    </ng-template>
-
+      </ng-template>
     </mat-toolbar-row>
-</mat-toolbar>
+  </mat-toolbar>

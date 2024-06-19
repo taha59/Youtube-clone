@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 
@@ -12,26 +12,26 @@ import { OidcSecurityService } from 'angular-auth-oidc-client';
 export class HeaderComponent implements OnInit{
 
   isAuthenticated: boolean = false
-  constructor(private oidcSecurityService: OidcSecurityService, private router: Router){}
+
+  constructor(private oidcSecurityService: OidcSecurityService){}
 
   ngOnInit(): void {
     this.oidcSecurityService.isAuthenticated$.subscribe(
      ({isAuthenticated}) => {
-      // console.log("this.")
-      
+  
       this.isAuthenticated = isAuthenticated
      }
     )
   }
 
   login(){
-    console.log("loggin in..")
     this.oidcSecurityService.authorize()
+
+    console.log(this.isAuthenticated)
   }
 
   logoff(){
     this.oidcSecurityService.logoffAndRevokeTokens()
     this.oidcSecurityService.logoffLocal()
-    console.log("logging out..", this.isAuthenticated)
   }
 }

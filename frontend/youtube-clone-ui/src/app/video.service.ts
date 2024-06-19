@@ -43,4 +43,12 @@ export class VideoService {
   getAllVideos(): Observable<Array<VideoDto>>{
     return this.httpClient.get<Array<VideoDto>>("http://localhost:8080/api/videos")
   }
+
+  likeVideo(videoId: string): Observable<VideoDto> {
+    return this.httpClient.post<VideoDto>("http://localhost:8080/api/videos/"+videoId+"/like", null)
+  }
+
+  dislikeVideo(videoId: string): Observable<VideoDto> {
+    return this.httpClient.post<VideoDto>("http://localhost:8080/api/videos/"+videoId+"/dislike", null)
+  }
 }
