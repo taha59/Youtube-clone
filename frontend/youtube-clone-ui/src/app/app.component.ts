@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { LoginResponse, OidcSecurityService } from 'angular-auth-oidc-client';
 
 @Component({
@@ -8,9 +8,8 @@ import { LoginResponse, OidcSecurityService } from 'angular-auth-oidc-client';
 })
 export class AppComponent implements OnInit{
   title = 'youtube-clone-ui';
-
-  constructor(private oidcSecurityService: OidcSecurityService){
-  }
+  private readonly oidcSecurityService: OidcSecurityService = inject(OidcSecurityService)
+  constructor(){}
 
   ngOnInit(): void{
     this.oidcSecurityService
