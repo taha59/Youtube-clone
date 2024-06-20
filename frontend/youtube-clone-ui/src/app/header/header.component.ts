@@ -12,6 +12,7 @@ import { OidcSecurityService } from 'angular-auth-oidc-client';
 export class HeaderComponent implements OnInit{
 
   private readonly oidcSecurityService: OidcSecurityService = inject(OidcSecurityService)
+  private readonly router: Router = inject(Router)
   isAuthenticated: boolean = false
 
   constructor(){}
@@ -19,7 +20,6 @@ export class HeaderComponent implements OnInit{
   ngOnInit(): void {
     this.oidcSecurityService.isAuthenticated$.subscribe(
      ({isAuthenticated}) => {
-  
       this.isAuthenticated = isAuthenticated
      }
     )
@@ -27,12 +27,15 @@ export class HeaderComponent implements OnInit{
 
   login(){
     this.oidcSecurityService.authorize()
-
-    console.log(this.isAuthenticated)
   }
 
   logoff(){
-    this.oidcSecurityService.logoffAndRevokeTokens()
-    this.oidcSecurityService.logoffLocal()
+
+    this.oidcSecurityService.logoffAndRevokeTokens().subscribe(() => {
+      this.oidcSecurityService.logoffLocal();
+
+      // this.router.navigateByUrl('');
+    });
+  
   }
 }
