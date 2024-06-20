@@ -10,6 +10,9 @@
       </button>
       <mat-menu #menu="matMenu">
         <button mat-menu-item (click)="logoff()">Logout</button>
+        <button mat-menu-item routerLink="">Home
+          <mat-icon>home</mat-icon>
+        </button>
       </mat-menu>
       <ng-template #noAuth>
         <button mat-raised-button (click)="login()">Login</button>

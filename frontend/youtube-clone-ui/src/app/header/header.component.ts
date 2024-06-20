@@ -11,9 +11,10 @@ import { OidcSecurityService } from 'angular-auth-oidc-client';
 
 export class HeaderComponent implements OnInit{
 
+  private readonly oidcSecurityService: OidcSecurityService = inject(OidcSecurityService)
   isAuthenticated: boolean = false
 
-  constructor(private oidcSecurityService: OidcSecurityService){}
+  constructor(){}
 
   ngOnInit(): void {
     this.oidcSecurityService.isAuthenticated$.subscribe(

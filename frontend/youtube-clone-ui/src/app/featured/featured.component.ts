@@ -1,6 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { VideoService } from '../video.service';
 import { VideoDto } from '../video-dto';
+import { OidcSecurityService } from 'angular-auth-oidc-client';
 
 @Component({
   selector: 'app-featured',
@@ -9,17 +10,26 @@ import { VideoDto } from '../video-dto';
 })
 export class FeaturedComponent implements OnInit {
   
-  // private readonly videoService: VideoService = inject(VideoService)
+  private readonly videoService: VideoService = inject(VideoService)
+  private readonly oidcSecurityService: OidcSecurityService = inject(OidcSecurityService)
+
   featuredVideos: Array<VideoDto> = [];
 
-  constructor(private videoService: VideoService ){
-    
-  }
+
+  constructor(){}
+  
   
   ngOnInit(): void {
-    this.videoService.getAllVideos().subscribe(res => {
-      this.featuredVideos = res
-    })
+    this.oidcSecurityService.isAuthenticated$.subscribe(
+      ({isAuthenticated}) => {
+        
+        if(isAuthenticated){
+          this.videoService.getAllVideos().subscribe(res => {
+            this.featuredVideos = res
+          })
+        }
+      }
+     )
   }
 
 }
