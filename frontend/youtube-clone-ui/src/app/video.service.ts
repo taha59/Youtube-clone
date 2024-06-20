@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { UploadVideoResponse } from './upload-video/UploadVideoResponse';
 import { VideoDto } from './video-dto';
@@ -9,7 +9,8 @@ import { VideoDto } from './video-dto';
 })
 export class VideoService {
 
-  constructor(private httpClient: HttpClient) { }
+  private readonly httpClient: HttpClient = inject(HttpClient)
+  constructor() { }
 
   uploadVideo(fileEntry: File): Observable<UploadVideoResponse> {
     const formData = new FormData();

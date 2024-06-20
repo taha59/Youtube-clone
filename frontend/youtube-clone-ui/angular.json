@@ -62,10 +62,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "youtube-clone-ui:build:production"
+              "buildTarget": "youtube-clone-ui:build:production"
             },
             "development": {
-              "browserTarget": "youtube-clone-ui:build:development"
+              "buildTarget": "youtube-clone-ui:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -73,7 +73,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "youtube-clone-ui:build"
+            "buildTarget": "youtube-clone-ui:build"
           }
         },
         "test": {

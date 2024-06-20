@@ -5,7 +5,7 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { UploadVideoComponent } from './upload-video/upload-video.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
+import { HTTP_INTERCEPTORS } from "@angular/common/http";
 import { NgxFileDropModule } from 'ngx-file-drop';
 import { MatButtonModule } from "@angular/material/button";
 import { HeaderComponent } from './header/header.component';
@@ -63,7 +63,6 @@ import {MatMenuModule} from '@angular/material/menu';
     AppRoutingModule,
     BrowserAnimationsModule,
     FormsModule,
-    HttpClientModule,
     NgxFileDropModule,
     MatButtonModule,
     MatToolbarModule,

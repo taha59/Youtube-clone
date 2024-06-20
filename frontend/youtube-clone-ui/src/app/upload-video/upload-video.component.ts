@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { NgxFileDropEntry, FileSystemFileEntry, FileSystemDirectoryEntry } from 'ngx-file-drop';
 import { VideoService } from '../video.service';
 import { Router } from '@angular/router';
@@ -10,13 +10,15 @@ import { Router } from '@angular/router';
 })
 export class UploadVideoComponent {
 
+  private readonly videoService: VideoService = inject(VideoService)
+  private readonly router: Router = inject(Router)
+
   public files: NgxFileDropEntry[] = [];
   fileUploaded = false
   fileEntry: FileSystemFileEntry | undefined
 
-  constructor(private videoService: VideoService, private router: Router){
 
-  }
+  constructor(){}
 
   public dropped(files: NgxFileDropEntry[]) {
     this.files = files;
@@ -30,21 +32,6 @@ export class UploadVideoComponent {
           // Here you can access the real file
           console.log(droppedFile.relativePath, file);
           this.fileUploaded = true;
-          /**
-          // You could upload it like this:
-          const formData = new FormData()
-          formData.append('logo', file, relativePath)
-
-          // Headers
-          const headers = new HttpHeaders({
-            'security-token': 'mytoken'
-          })
-
-          this.http.post('https://mybackend.com/api/upload/sanitize-and-save-logo', formData, { headers: headers, responseType: 'blob' })
-          .subscribe(data => {
-            // Sanitized logo returned from backend
-          })
-          **/
 
         });
       } else {

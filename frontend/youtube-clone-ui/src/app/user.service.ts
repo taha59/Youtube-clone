@@ -7,10 +7,10 @@ import { Observable } from 'rxjs';
 })
 export class UserService {
  
-  // private readonly httpClient: HttpClient = inject(HttpClient)
+  private readonly httpClient: HttpClient = inject(HttpClient)
   private userId: string = ''
   
-  constructor(private httpClient: HttpClient) { }
+  constructor() { }
 
   subscribeToUser(userId: string): Observable<boolean>{
     return this.httpClient.post<boolean>("http://localhost:8080/api/user/subscribe/"+userId, null)
