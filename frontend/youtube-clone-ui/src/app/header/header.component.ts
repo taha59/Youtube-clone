@@ -33,9 +33,7 @@ export class HeaderComponent implements OnInit{
 
     this.oidcSecurityService.logoffAndRevokeTokens().subscribe(() => {
       this.oidcSecurityService.logoffLocal();
-
-      // this.router.navigateByUrl('');
     });
-  
+
   }
 }

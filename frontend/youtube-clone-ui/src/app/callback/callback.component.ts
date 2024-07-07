@@ -21,7 +21,6 @@ export class CallbackComponent implements OnInit{
       ({isAuthenticated}) => {
         if(isAuthenticated){
         this.userService.registerUser()
-        this.router.navigateByUrl('')
         }
       }
      )
