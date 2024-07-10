@@ -1,11 +1,9 @@
 package com.programming.taha.Youtubeclone.service;
 
-import io.awspring.cloud.s3.ObjectMetadata;
-import io.awspring.cloud.s3.S3Template;
+import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -13,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import software.amazon.awssdk.services.s3.model.GetUrlRequest;
 import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -20,8 +19,6 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class S3Service implements FileService{
-    @Autowired
-    private S3Template s3Template;
 
     public static final String BUCKETNAME = "youtubefilesbucket";
 
@@ -35,15 +32,13 @@ public class S3Service implements FileService{
         var key = UUID.randomUUID() + "." + filenameExtension;
 
         try {
-
-            String file_size = String.valueOf(file.getSize());
-            s3Template.upload(BUCKETNAME, key, file.getInputStream(),
-                    ObjectMetadata.builder()
-                    .contentType(file.getContentType())
-                    .metadata("Size", file_size)
+            PutObjectRequest objectRequest = PutObjectRequest.builder()
+                    .bucket(BUCKETNAME)
+                    .key(key)
                     .acl(ObjectCannedACL.PUBLIC_READ)
-                    .build()
-            );
+                    .build();
+
+            s3Client.putObject(objectRequest, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
 
         } catch (IOException ioException){
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
