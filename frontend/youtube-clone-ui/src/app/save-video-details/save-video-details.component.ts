@@ -7,6 +7,7 @@ import { ActivatedRoute } from '@angular/router';
 import { VideoService } from '../video.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { VideoDto } from '../video-dto';
+import { UserService } from '../user.service';
 
 @Component({
   selector: 'app-save-video-details',
@@ -31,6 +32,7 @@ export class SaveVideoDetailsComponent implements OnInit{
   thumbnailUrl : string
 
   announcer = inject(LiveAnnouncer);
+  private readonly userService: UserService = inject(UserService)
 
   constructor(private activatedRoute: ActivatedRoute, private videoService: VideoService
     ,private matSnackBar: MatSnackBar
@@ -111,8 +113,10 @@ export class SaveVideoDetailsComponent implements OnInit{
 
   editVideoMetaData(){
 
+    const userId = this.userService.getUserId()
     const videoDto: VideoDto = {
       id: this.videoId,
+      userId: userId,
       title: this.title.value,
       description: this.description.value,
       tags: this.tags,

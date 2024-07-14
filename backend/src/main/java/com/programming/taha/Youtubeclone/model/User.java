@@ -21,9 +21,9 @@ public class User {
     private String fullName;
     private String emailAddress;
     private String sub;
-    private Set<String> subscribedToUsers = ConcurrentHashMap.newKeySet();;
-    private Set<String> subscribers = ConcurrentHashMap.newKeySet();;
-    private Set<String> videoHistory = ConcurrentHashMap.newKeySet();;
+    private Set<String> subscribedToUsers = ConcurrentHashMap.newKeySet();
+    private Set<String> subscribers = ConcurrentHashMap.newKeySet();
+    private Set<String> videoHistory = ConcurrentHashMap.newKeySet();
     private Set<String> likedVideos = ConcurrentHashMap.newKeySet();
     private Set<String> dislikedVideos = ConcurrentHashMap.newKeySet();
 
@@ -47,9 +47,9 @@ public class User {
         videoHistory.add(videoId);
     }
 
-    public void addToSubscribedToUsers(String userId) { subscribedToUsers.add(userId); }
+    public void addToSubscribedToUsers(String userId) { subscribedToUsers.add(userId);}
 
-    public void addToSubscribers(String userId) { subscribers.add(userId); }
+    public void addToSubscribers(String userId) { subscribers.add(userId);}
 
     public void removeFromSubscribedToUsers(String userId) { subscribedToUsers.remove(userId); }
 

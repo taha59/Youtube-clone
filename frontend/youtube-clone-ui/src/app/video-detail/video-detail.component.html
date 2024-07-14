@@ -30,16 +30,15 @@
           <button *ngIf="isSubscribed" class="subscribe-button" mat-raised-button color="warn" 
           (click)="subscribeToUser()">SUBSCRIBE
           </button>
-          <button *ngIf ="isUnsubscribed" class="subscribe-button-clicked" mat-raised-button color="accent"
+          <button *ngIf ="!isSubscribed" class="subscribe-button-clicked" mat-raised-button color="accent"
           (click)="unsubscribeToUser()">
             SUBSCRIBED
           </button>
         </mat-card-header>
         <div>{{videoDescription}}</div>
         <mat-divider></mat-divider>
-        <mat-chip-set>
-            <mat-chip>Spring Boot</mat-chip>
-            <mat-chip>Angular</mat-chip>
+        <mat-chip-set *ngFor="let tag of videoTags">
+            <mat-chip>{{tag}}</mat-chip>
         </mat-chip-set>
         <mat-divider></mat-divider>
         <app-comments [videoId] = "videoId"> </app-comments>

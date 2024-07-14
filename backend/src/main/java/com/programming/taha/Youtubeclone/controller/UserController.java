@@ -40,7 +40,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public boolean unsubscribeUser(@PathVariable String userId){
         userService.unsubscribeUser(userId);
-        return true;
+        return false;
     }
 
     //get the video history of a user
@@ -49,6 +49,5 @@ public class UserController {
     public Set<String> getUserHistory(@PathVariable String userId){
         return userService.getUserHistory(userId);
     }
-
 
 }

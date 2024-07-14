@@ -82,37 +82,39 @@ public class UserService {
     }
 
     public void subscribeUser(String userId) {
+        
         User currentUser = getCurrentUser();
+
+        //add the user being subscribed to addToSubscribers set
+        currentUser.addToSubscribedToUsers(userId);
+        //save the changes of current user and the user that is being subscribed to
+        userRepository.save(currentUser);
 
         //get user by id
         User user = getUserById(userId);
 
-        //add the user being subscribed to addToSubscribers set
-        currentUser.addToSubscribedToUsers(userId);
-
         //add the current user to the target user's subscribers
         user.addToSubscribers(currentUser.getId());
 
-        //save the changes of current user and the user that is being subscribed to
-        userRepository.save(currentUser);
         userRepository.save(user);
     }
 
     public void unsubscribeUser(String userId) {
         User currentUser = getCurrentUser();
 
-        //get User by id
-        User user = getUserById(userId);
-
         //if a current user unsubscribes to another user then current user list
         currentUser.removeFromSubscribedToUsers(userId);
 
+        userRepository.save(currentUser);
+
+        //get User by id
+        User user = getUserById(userId);
+
         //since the current user is no longer subscribed to target user
-        // , remove the current user from the targets user's subscriber list
+        //, remove the current user from the targets user's subscriber list
         user.removeFromSubscribers(currentUser.getId());
 
         //save the changes of current user and the user that is being subscribed to
-        userRepository.save(currentUser);
         userRepository.save(user);
     }
 

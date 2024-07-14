@@ -22,7 +22,7 @@ public class S3Service implements FileService{
 
     public static final String BUCKETNAME = "youtubefilesbucket";
 
-    private final S3Client s3Client;
+    private final S3Client s3Client = S3Client.create();
 
     @Override
     public String uploadFile (MultipartFile file) {

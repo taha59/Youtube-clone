@@ -40,6 +40,7 @@ public class VideoService {
         savedVideo.setTags(videoDto.getTags());
         savedVideo.setThumbnailUrl(videoDto.getThumbnailUrl());
         savedVideo.setVideoStatus(videoDto.getVideoStatus());
+        savedVideo.setUserId(videoDto.getUserId());
 
         videoRepository.save(savedVideo);
         return videoDto;
@@ -167,6 +168,7 @@ public class VideoService {
         videoDto.setLikeCount(video.getLikes().get());
         videoDto.setDislikeCount(video.getDislikes().get());
         videoDto.setViewCount(video.getViewCount().get());
+        videoDto.setUserId(video.getUserId());
 
         return videoDto;
     }

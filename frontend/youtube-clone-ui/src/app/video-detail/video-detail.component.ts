@@ -13,7 +13,7 @@ export class VideoDetailComponent implements OnInit {
   private readonly activatedRoute = inject(ActivatedRoute)
   private readonly videoService = inject(VideoService)
   private readonly userService = inject(UserService)
-  
+
   videoId: string;
   videoUrl: string;
   videoTitle: string
@@ -22,12 +22,10 @@ export class VideoDetailComponent implements OnInit {
   likeCount: number = 0
   dislikeCount: number = 0
   viewCount: number = 0
+  userId: string = ""
 
   isSubscribed: boolean = true
-  isUnsubscribed: boolean = false
-  
-  videoAvailable: boolean = false
-  
+
   constructor(){
     this.videoId = this.activatedRoute.snapshot.params['videoId']
 
@@ -38,10 +36,10 @@ export class VideoDetailComponent implements OnInit {
         this.videoTitle = data.title
         this.videoDescription = data.description
         this.videoTags = data.tags
-        this.videoAvailable = true
         this.likeCount = data.likeCount
         this.dislikeCount = data.dislikeCount
         this.viewCount = data.viewCount
+        this.userId = data.userId
       }
     )
   }
@@ -63,23 +61,18 @@ export class VideoDetailComponent implements OnInit {
   }
 
   subscribeToUser(){
-    
-    let userId = this.userService.getUserId()
-    console.log("subscribing user id is: ", userId)
+    console.log("subscribing user id is: ", this.userId)
 
-    this.userService.subscribeToUser(userId).subscribe(data => {
+    this.userService.subscribeToUser(this.userId).subscribe(data => {
       this.isSubscribed = false
-      this.isUnsubscribed = true
     })
   }
 
   unsubscribeToUser(){
-    let userId = this.userService.getUserId()
-    console.log("unsubscribing user id is: ", userId)
+    console.log("unsubscribing user id is: ", this.userId)
 
-    this.userService.unsubscribeToUser(userId).subscribe(data => {
+    this.userService.unsubscribeToUser(this.userId).subscribe(data => {
       this.isSubscribed = true
-      this.isUnsubscribed = false
     })
   }
 
