@@ -23,15 +23,15 @@ export class VideoDetailComponent implements OnInit {
   dislikeCount: number = 0
   viewCount: number = 0
   userId: string = ""
+  userName: string = ""
 
-  isSubscribed: boolean = true
+  isSubscribed: boolean = false
 
   constructor(){
     this.videoId = this.activatedRoute.snapshot.params['videoId']
 
     this.videoService.getVideo(this.videoId).subscribe(data =>
       {
-        console.log(data.videoUrl)
         this.videoUrl = data.videoUrl
         this.videoTitle = data.title
         this.videoDescription = data.description
@@ -40,11 +40,20 @@ export class VideoDetailComponent implements OnInit {
         this.dislikeCount = data.dislikeCount
         this.viewCount = data.viewCount
         this.userId = data.userId
+
+        this.userService.getUpdatedUser().subscribe(currUser =>{
+          this.isSubscribed = currUser.subscribedToUsers.includes(data.userId)
+          this.userService.getTargetUser(data.userId).subscribe(targetUser => {
+            this.userName = targetUser.firstName
+          })
+
+        })
       }
     )
   }
 
-  ngOnInit(): void{}
+  ngOnInit(): void{
+  }
 
   likeVideo(){
     this.videoService.likeVideo(this.videoId).subscribe((data)=>{
@@ -61,18 +70,20 @@ export class VideoDetailComponent implements OnInit {
   }
 
   subscribeToUser(){
-    console.log("subscribing user id is: ", this.userId)
+    console.log("subscribing to: ", this.userId)
 
     this.userService.subscribeToUser(this.userId).subscribe(data => {
-      this.isSubscribed = false
+      this.isSubscribed = true
     })
+
+
   }
 
   unsubscribeToUser(){
-    console.log("unsubscribing user id is: ", this.userId)
+    console.log("unsubscribing to: ", this.userId)
 
     this.userService.unsubscribeToUser(this.userId).subscribe(data => {
-      this.isSubscribed = true
+      this.isSubscribed = false
     })
   }
 

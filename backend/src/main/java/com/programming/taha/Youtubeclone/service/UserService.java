@@ -1,22 +1,26 @@
 package com.programming.taha.Youtubeclone.service;
 
+import com.programming.taha.Youtubeclone.dto.VideoDto;
 import com.programming.taha.Youtubeclone.model.User;
+import com.programming.taha.Youtubeclone.model.Video;
 import com.programming.taha.Youtubeclone.repository.UserRepository;
+import com.programming.taha.Youtubeclone.repository.VideoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
-import java.util.Set;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
+    private final VideoRepository videoRepository;
 
     //Helper methods for user service
-    private User getUserById(String userId){
+    public User getUserById(String userId){
         return userRepository.findById(userId).
                 orElseThrow(() ->
                         new IllegalArgumentException
@@ -82,7 +86,7 @@ public class UserService {
     }
 
     public void subscribeUser(String userId) {
-        
+        //if the user is already subscribed to target userid then return
         User currentUser = getCurrentUser();
 
         //add the user being subscribed to addToSubscribers set
@@ -97,12 +101,13 @@ public class UserService {
         user.addToSubscribers(currentUser.getId());
 
         userRepository.save(user);
+
     }
 
     public void unsubscribeUser(String userId) {
         User currentUser = getCurrentUser();
 
-        //if a current user unsubscribes to another user then current user list
+        //if a current user unsubscribes to another user
         currentUser.removeFromSubscribedToUsers(userId);
 
         userRepository.save(currentUser);
@@ -118,8 +123,86 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public Set<String> getUserHistory(String userId) {
-        User user = getUserById(userId);
-        return user.getVideoHistory();
+    public List<VideoDto> getUserHistory() {
+        User user = getCurrentUser();
+
+        // Fetch the user's video history set
+        Set<String> watchHistory = user.getVideoHistory();
+
+        // Initialize a list to store the video DTOs
+        List<VideoDto> videoDtoList = new ArrayList<>();
+
+        // Iterate through the video history set
+        for (String videoId : watchHistory) {
+            // Find the video by its ID
+            Optional<Video> videoOpt = videoRepository.findById(videoId);
+            //if video exists convert it to videoDto and add it to list
+            videoOpt.ifPresent(video -> videoDtoList.add(setToVideoDto(video)));
+        }
+
+        // Return the list of video DTOs
+        return videoDtoList;
     }
+
+    public List<VideoDto> getLikedVideos() {
+        User user = getCurrentUser();
+
+        // Fetch the user's liked videos set
+        Set<String> likedVideos = user.getLikedVideos();
+
+        // Initialize a list to store the video DTOs
+        List<VideoDto> videoDtoList = new ArrayList<>();
+
+        // Iterate through the video history set
+        for (String videoId : likedVideos) {
+            // Find the video by its ID
+            Optional<Video> videoOpt = videoRepository.findById(videoId);
+            //if video exists convert it to videoDto and add it to list
+            videoOpt.ifPresent(video -> videoDtoList.add(setToVideoDto(video)));
+        }
+
+        // Return the list of video DTOs
+        return videoDtoList;
+    }
+
+    public List<VideoDto> getSubscribedVideos() {
+        User user = getCurrentUser();
+
+        // Fetch the users that are subscribed to current user
+        Set<String> subscribedToSet = user.getSubscribedToUsers();
+
+        // Initialize a set to store the video DTOs
+        Set<VideoDto> videoDtoSet = new HashSet<>();
+
+        // Iterate through the video history set
+        for (String subscribedTo: subscribedToSet) {
+            // Find the video by its ID
+            Optional<List<Video>> videoOpt = videoRepository.findByUserId(subscribedTo);
+
+            videoOpt.ifPresent(videos -> {
+                videos.forEach(video -> videoDtoSet.add(setToVideoDto(video)));
+            });
+        }
+
+        // Return the list of video DTOs
+        return videoDtoSet.stream().toList();
+    }
+
+    //helper methods
+    private VideoDto setToVideoDto(Video video){
+        VideoDto videoDto = new VideoDto();
+        videoDto.setVideoUrl(video.getVideoUrl());
+        videoDto.setThumbnailUrl(video.getThumbnailUrl());
+        videoDto.setId(video.getId());
+        videoDto.setTitle(video.getTitle());
+        videoDto.setDescription(video.getDescription());
+        videoDto.setTags(video.getTags());
+        videoDto.setVideoStatus(video.getVideoStatus());
+        videoDto.setLikeCount(video.getLikes().get());
+        videoDto.setDislikeCount(video.getDislikes().get());
+        videoDto.setViewCount(video.getViewCount().get());
+        videoDto.setUserId(video.getUserId());
+
+        return videoDto;
+    }tat
 }

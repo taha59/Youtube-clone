@@ -32,11 +32,13 @@ export class SaveVideoDetailsComponent implements OnInit{
   thumbnailUrl : string
 
   announcer = inject(LiveAnnouncer);
-  private readonly userService: UserService = inject(UserService)
+  private readonly userService = inject(UserService)
+  private readonly videoService = inject(VideoService)
+  private readonly matSnackBar = inject(MatSnackBar)
+  private readonly activatedRoute = inject(ActivatedRoute)
 
-  constructor(private activatedRoute: ActivatedRoute, private videoService: VideoService
-    ,private matSnackBar: MatSnackBar
-  ){
+  constructor(){
+
     this.videoId = this.activatedRoute.snapshot.params['videoId']
     this.videoService.getVideo(this.videoId).subscribe(data =>
       {
@@ -113,7 +115,7 @@ export class SaveVideoDetailsComponent implements OnInit{
 
   editVideoMetaData(){
 
-    const userId = this.userService.getUserId()
+    const userId = this.userService.getUser().id
     const videoDto: VideoDto = {
       id: this.videoId,
       userId: userId,

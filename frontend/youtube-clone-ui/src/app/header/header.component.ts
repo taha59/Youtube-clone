@@ -11,8 +11,8 @@ import { OidcSecurityService } from 'angular-auth-oidc-client';
 
 export class HeaderComponent implements OnInit{
 
-  private readonly oidcSecurityService: OidcSecurityService = inject(OidcSecurityService)
-  private readonly router: Router = inject(Router)
+  private readonly oidcSecurityService = inject(OidcSecurityService)
+  private readonly router = inject(Router)
   isAuthenticated: boolean = false
 
   constructor(){}
@@ -31,7 +31,8 @@ export class HeaderComponent implements OnInit{
 
   logoff(){
 
-    this.oidcSecurityService.logoffAndRevokeTokens().subscribe(() => {
+    this.oidcSecurityService.logoffAndRevokeTokens()
+    .subscribe(() => {
       this.oidcSecurityService.logoffLocal();
     });
 

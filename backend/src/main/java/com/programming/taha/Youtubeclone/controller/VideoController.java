@@ -76,6 +76,12 @@ public class VideoController {
         return videoService.getAllComments(videoId);
     }
 
+    @PostMapping("{videoId}/delete-comments")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteAllComments(@PathVariable String videoId){
+        videoService.deleteAllComments(videoId);
+    }
+
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
     public List<VideoDto> getAllVideos(){

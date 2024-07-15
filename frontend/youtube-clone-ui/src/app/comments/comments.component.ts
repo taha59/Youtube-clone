@@ -11,9 +11,9 @@ import { CommentDto } from '../comment-dto';
   styleUrl: './comments.component.css'
 })
 export class CommentsComponent implements OnInit {
-  private readonly userService: UserService = inject(UserService)
-  private readonly commentService: CommentsService = inject(CommentsService)
-  private readonly matSnackBar: MatSnackBar = inject(MatSnackBar)
+  private readonly userService = inject(UserService)
+  private readonly commentService = inject(CommentsService)
+  private readonly matSnackBar = inject(MatSnackBar)
   
   commentsForm: FormGroup;
   commentsDto: CommentDto[] = []
@@ -34,6 +34,7 @@ export class CommentsComponent implements OnInit {
 
   getComments(){
     this.commentService.getAllComments(this.videoId).subscribe(data =>{
+      console.log(data)
       this.commentsDto = data
     })
   }
@@ -41,17 +42,21 @@ export class CommentsComponent implements OnInit {
   postComment(){
     const comment = this.commentsForm.get('comment')?.value
 
-    const commentDto = {
-      "commentText": comment,
-      "authorId": this.userService.getUserId()
-    }
+    this.userService.getUpdatedUser().subscribe((user) => {
 
-    this.commentService.postComment(commentDto, this.videoId).subscribe(() =>{
-      this.matSnackBar.open("Comment posted!", "OK")
-      
-      this.commentsForm.get('comment')?.reset()
-
-      this.getComments()
+      console.log("comment posted by ", user.id)
+      const commentDto = {
+        "commentText": comment,
+        "authorId": user.id
+      }
+  
+      this.commentService.postComment(commentDto, this.videoId).subscribe(() =>{
+        this.matSnackBar.open("Comment posted!", "OK")
+        
+        this.commentsForm.get('comment')?.reset()
+  
+        this.getComments()
+      })
     })
   }
 

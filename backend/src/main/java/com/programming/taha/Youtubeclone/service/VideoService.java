@@ -155,6 +155,12 @@ public class VideoService {
         return videoRepository.findAll().stream().map(this::setToVideoDto).toList();
     }
 
+    public void deleteAllComments(String videoId){
+        Video video = getVideoById(videoId);
+        video.deleteAllComments();
+        videoRepository.save(video);
+    }
+
     //sets up videoDto
     private VideoDto setToVideoDto(Video video){
         VideoDto videoDto = new VideoDto();
@@ -178,7 +184,7 @@ public class VideoService {
         CommentDto commentDto = new CommentDto();
 
         commentDto.setCommentText(comment.getText());
-        commentDto.setAuthorId(commentDto.getAuthorId());
+        commentDto.setAuthorId(comment.getAuthorId());
 
         return commentDto;
     }

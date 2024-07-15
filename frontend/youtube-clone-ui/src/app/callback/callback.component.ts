@@ -9,9 +9,8 @@ import { OidcSecurityService } from 'angular-auth-oidc-client';
   styleUrl: './callback.component.css'
 })
 export class CallbackComponent implements OnInit{
-  private readonly userService: UserService = inject(UserService)
-  private readonly router: Router = inject(Router)
-  private readonly oidcSecurityService: OidcSecurityService = inject(OidcSecurityService)
+  private readonly userService = inject(UserService)
+  private readonly oidcSecurityService = inject(OidcSecurityService)
 
   constructor(){
   }

@@ -10,8 +10,8 @@ import { Router } from '@angular/router';
 })
 export class UploadVideoComponent {
 
-  private readonly videoService: VideoService = inject(VideoService)
-  private readonly router: Router = inject(Router)
+  private readonly videoService = inject(VideoService)
+  private readonly router = inject(Router)
 
   public files: NgxFileDropEntry[] = [];
   fileUploaded = false

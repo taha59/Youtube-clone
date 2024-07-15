@@ -10,26 +10,21 @@ import { OidcSecurityService } from 'angular-auth-oidc-client';
 })
 export class FeaturedComponent implements OnInit {
   
-  private readonly videoService: VideoService = inject(VideoService)
-  private readonly oidcSecurityService: OidcSecurityService = inject(OidcSecurityService)
+  private readonly videoService = inject(VideoService)
 
   featuredVideos: Array<VideoDto> = [];
 
 
-  constructor(){}
+  constructor(){
+    this.videoService.getAllVideos().subscribe(videos => {
+      this.featuredVideos = videos
+      console.log("featured",this.featuredVideos)
+    })
+  }
   
   
   ngOnInit(): void {
-    this.oidcSecurityService.isAuthenticated$.subscribe(
-      ({isAuthenticated}) => {
-        
-        if(isAuthenticated){
-          this.videoService.getAllVideos().subscribe(res => {
-            this.featuredVideos = res
-          })
-        }
-      }
-     )
+    
   }
 
 }

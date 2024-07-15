@@ -25,12 +25,12 @@ public class UserRegistrationService {
 
     private final UserRepository userRepository;
 
-    public String registerUser(Jwt principal){
+    public User registerUser(Jwt principal){
 
         //if the user sub is already registered
         Optional<User> userBySubject = userRepository.findBySub(principal.getSubject());
         if (userBySubject.isPresent()){
-            return userBySubject.get().getId();
+            return userBySubject.get();
         }
 
         //retrieve user info from userInfo endpoint
@@ -63,7 +63,7 @@ public class UserRegistrationService {
             user.setEmailAddress(userInfoDto.getEmail());
             user.setSub(userInfoDto.getSub());
 
-            return userRepository.save(user).getId();
+            return userRepository.save(user);
         }
         catch(Exception exception){
             throw new RuntimeException("Exception occurred while registering user", exception);

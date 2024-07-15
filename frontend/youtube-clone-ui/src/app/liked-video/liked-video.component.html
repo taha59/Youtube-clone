@@ -3,8 +3,8 @@
 </div>
 
 <div fxLayout = "row args" fxLayoutGap="12px grid">
-    <div fxFlex="20%" *ngFor="let num of [1,2,3,4,5,7,8,1]">
-        <app-video-card></app-video-card>
+    <div fxFlex="20%" *ngFor="let video of likedVideos">
+        <app-video-card [video] = "video"></app-video-card>
     </div>
     
 </div>
