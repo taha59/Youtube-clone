@@ -3,23 +3,40 @@ import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { UploadVideoResponse } from './upload-video/UploadVideoResponse';
 import { VideoDto } from './video-dto';
+import { UserService } from './user.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class VideoService {
-
-  private readonly httpClient: HttpClient = inject(HttpClient)
+  private readonly userService = inject(UserService)
+  private readonly httpClient = inject(HttpClient)
   constructor() { }
 
-  uploadVideo(fileEntry: File): Observable<UploadVideoResponse> {
+  uploadVideoByFileDrop(fileEntry: File): Observable<UploadVideoResponse> {
+    const userId = this.userService.getUser().id
     const formData = new FormData();
     formData.append('file', fileEntry, fileEntry.name);
+    formData.append('userId', userId)
 
     console.log('Uploading video...');
 
     // Using HTTP for local development
     return this.httpClient.post<UploadVideoResponse>("http://localhost:8080/api/videos", formData);
+  }
+
+  uploadVideoByYoutubeUrl(youtubeUrl: string): Observable<UploadVideoResponse> {
+    const userId = this.userService.getUser().id
+    const formData = new FormData();
+
+    formData.append('youtubeUrl', youtubeUrl)
+    formData.append('userId', userId)
+
+
+    console.log('Uploading video via url...');
+
+    // Using HTTP for local development
+    return this.httpClient.post<UploadVideoResponse>("http://localhost:8080/api/videos/upload-by-url", formData);
   }
 
   uploadThumbnail(fileEntry: File, videoId: string): Observable<string> {

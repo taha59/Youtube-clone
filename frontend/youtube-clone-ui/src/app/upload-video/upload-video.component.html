@@ -1,4 +1,10 @@
 <div class="center">
+
+    <mat-form-field appearance="fill">
+        <mat-label>YouTube URL</mat-label>
+        <input matInput [(ngModel)]="youtubeUrl" placeholder="Enter YouTube URL">
+    </mat-form-field>
+
     <ngx-file-drop dropZoneLabel="Drop files here" (onFileDrop)="dropped($event)" 
     (onFileOver)="fileOver($event)" (onFileLeave)="fileLeave($event)">
         <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
@@ -19,8 +25,12 @@
                 </tr>
             </tbody>
         </table>
+
+        
     </div>
 
-    <button mat-button (click) = "uploadVideo()" *ngIf="fileUploaded">Upload Video</button>
 
+    <button mat-button (click) = "uploadVideoByFileDrop()" *ngIf="fileUploaded">File drop upload</button>
+
+    <button mat-button (click) = "uploadVideoByYoutubeUrl()" *ngIf="youtubeUrl">Youtube Url Upload</button>
 </div>

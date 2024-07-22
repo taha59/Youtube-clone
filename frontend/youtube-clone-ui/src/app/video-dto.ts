@@ -1,7 +1,7 @@
 export interface VideoDto{
     id: string
-    title: string
     userId: string
+    title: string
     description: string
     tags: Array<string>
     videoUrl: string

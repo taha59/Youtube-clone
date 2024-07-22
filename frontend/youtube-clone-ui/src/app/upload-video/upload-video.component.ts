@@ -16,6 +16,7 @@ export class UploadVideoComponent {
   public files: NgxFileDropEntry[] = [];
   fileUploaded = false
   fileEntry: FileSystemFileEntry | undefined
+  youtubeUrl: string = ''
 
 
   constructor(){}
@@ -50,12 +51,12 @@ export class UploadVideoComponent {
     console.log(event);
   }
 
-  uploadVideo(){
+  uploadVideoByFileDrop(){
     if (this.fileEntry !== undefined){
 
       this.fileEntry.file(file => {
 
-        this.videoService.uploadVideo(file).subscribe( data => {
+        this.videoService.uploadVideoByFileDrop(file).subscribe( data => {
 
           this.router.navigateByUrl("/save-video-details/" + data.videoId);
           
@@ -63,7 +64,14 @@ export class UploadVideoComponent {
       })
       
     }
+  }
 
-
+  uploadVideoByYoutubeUrl(){
+    if (this.youtubeUrl !== ""){
+      this.videoService.uploadVideoByYoutubeUrl(this.youtubeUrl).subscribe( data => {
+        this.router.navigateByUrl("/save-video-details/" + data.videoId);
+      })
+    }
   }
 }
+

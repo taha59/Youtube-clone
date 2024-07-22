@@ -25,14 +25,15 @@ public class VideoService {
     private final UserService userService;
     private final VideoRepository videoRepository;
 
-    public UploadVideoResponse uploadVideo(MultipartFile multipartFile) {
+    public UploadVideoResponse uploadVideo(MultipartFile multipartFile, String thumbnailUrl, String userId) {
         //upload file to AWS
         String videoURL = s3Service.uploadFile(multipartFile);
         var video = new Video();
         video.setVideoUrl(videoURL);
+        video.setThumbnailUrl(thumbnailUrl);
+        video.setUserId(userId);
 
         var saved_video = videoRepository.save(video);
-
         return new UploadVideoResponse(saved_video.getId(), saved_video.getVideoUrl());
     }
 
@@ -45,7 +46,6 @@ public class VideoService {
         savedVideo.setTags(videoDto.getTags());
         savedVideo.setThumbnailUrl(videoDto.getThumbnailUrl());
         savedVideo.setVideoStatus(videoDto.getVideoStatus());
-        savedVideo.setUserId(videoDto.getUserId());
 
         videoRepository.save(savedVideo);
         return videoDto;
@@ -156,6 +156,13 @@ public class VideoService {
                 .toList();
     }
 
+    public void deleteAllVideos(){
+
+        //delete all files from repository and the s3 bucket
+        videoRepository.deleteAll();
+        s3Service.deleteFiles();
+    }
+
     public List<VideoDto> getAllVideos() {
         return videoRepository.findAll().stream().map(this::setToVideoDto).toList();
     }
@@ -194,11 +201,12 @@ public class VideoService {
         return commentDto;
     }
 
-    public UploadVideoResponse uploadByYoutubeUrl(String youtubeUrl) {
+    public UploadVideoResponse uploadByYoutubeUrl(String youtubeUrl, String userId) {
 
-        StringBuilder filePath = new StringBuilder("tmp/");
+        String filePath;
+        String thumbnailUrl;
 
-        //execute python code for downloading youtube video by its url
+        //execute python code for downloading YouTube video by its url
         ProcessBuilder processBuilder = new ProcessBuilder("python3", "downloadYoutubeVideo.py", youtubeUrl);
         processBuilder.redirectErrorStream(true); // Merge stderr with stdout
 
@@ -210,15 +218,14 @@ public class VideoService {
             // Read and print the output from the Python script (stdout)
             InputStream inputStream = process.getInputStream();
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                System.out.println("stdout: " + line);
-                filePath.append(line).append(".mp4");
-            }
+
+            filePath = reader.readLine();
+            thumbnailUrl = reader.readLine();
+            System.out.println("file path: "+filePath);
 
             // Wait for the Python process to complete
             int exitCode = process.waitFor();
-            System.out.println("Process exited with code " + exitCode);
+            if(exitCode == 0) System.out.println("python script executed successfully!");
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         } finally {
@@ -228,18 +235,19 @@ public class VideoService {
         }
 
         //convert the file stored in tmp dir to a multipart file before uploading it to S3
-        Path path = Paths.get(String.valueOf(filePath));
+        Path path = Paths.get(filePath);
         try {
             byte[] data = Files.readAllBytes(path);
-            System.out.println(String.valueOf(filePath));
+            System.out.println(filePath);
+            System.out.println(thumbnailUrl);
 
             MultipartFile multipartFile = new MockMultipartFile(
-                    String.valueOf(filePath),
-                    String.valueOf(filePath),
+                    filePath,
+                    filePath,
                     "video/mp4",
                     data);
 
-            return uploadVideo(multipartFile);
+            return uploadVideo(multipartFile, thumbnailUrl, userId);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

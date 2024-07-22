@@ -30,6 +30,7 @@ export class SaveVideoDetailsComponent implements OnInit{
   fileSelected : boolean = false
   videoUrl: string
   thumbnailUrl : string
+  userId: string
 
   announcer = inject(LiveAnnouncer);
   private readonly userService = inject(UserService)
@@ -44,6 +45,7 @@ export class SaveVideoDetailsComponent implements OnInit{
       {
         this.videoUrl = data.videoUrl
         this.thumbnailUrl = data.thumbnailUrl
+        this.userId = data.userId
       }
     )
 
@@ -115,10 +117,9 @@ export class SaveVideoDetailsComponent implements OnInit{
 
   editVideoMetaData(){
 
-    const userId = this.userService.getUser().id
     const videoDto: VideoDto = {
       id: this.videoId,
-      userId: userId,
+      userId: this.userId,
       title: this.title.value,
       description: this.description.value,
       tags: this.tags,

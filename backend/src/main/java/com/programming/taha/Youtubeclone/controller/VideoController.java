@@ -3,7 +3,6 @@ package com.programming.taha.Youtubeclone.controller;
 import com.programming.taha.Youtubeclone.dto.CommentDto;
 import com.programming.taha.Youtubeclone.dto.UploadVideoResponse;
 import com.programming.taha.Youtubeclone.dto.VideoDto;
-import com.programming.taha.Youtubeclone.dto.YoutubeUrlDto;
 import com.programming.taha.Youtubeclone.service.VideoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,7 +23,7 @@ public class VideoController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UploadVideoResponse uploadVideo(@RequestParam("file") MultipartFile file){
-        return videoService.uploadVideo(file);
+        return videoService.uploadVideo(file, "", "");
     }
 
     //endpoint for uploading thumbnail
@@ -87,11 +86,18 @@ public class VideoController {
         return videoService.getAllVideos();
     }
 
+    @DeleteMapping()
+    @ResponseStatus(HttpStatus.OK)
+    public String deleteAllVideos(){
+        videoService.deleteAllVideos();
+        return "Videos deleted successfully";
+    }
+
     @PostMapping("upload-by-url")
     @ResponseStatus(HttpStatus.OK)
-    public UploadVideoResponse uploadByYoutubeUrl(@RequestBody YoutubeUrlDto youtubeUrlDto) {
-        System.out.println(youtubeUrlDto.getYoutubeUrl());
-        return videoService.uploadByYoutubeUrl(youtubeUrlDto.getYoutubeUrl());
+    public UploadVideoResponse uploadByYoutubeUrl(@RequestParam String youtubeUrl, @RequestParam String userId) {
+        return videoService.uploadByYoutubeUrl(youtubeUrl, userId);
     }
+
 
 }
