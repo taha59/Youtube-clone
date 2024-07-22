@@ -7,9 +7,14 @@ import com.programming.taha.Youtubeclone.model.Comment;
 import com.programming.taha.Youtubeclone.model.Video;
 import com.programming.taha.Youtubeclone.repository.VideoRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @Service
@@ -187,5 +192,58 @@ public class VideoService {
         commentDto.setAuthorId(comment.getAuthorId());
 
         return commentDto;
+    }
+
+    public UploadVideoResponse uploadByYoutubeUrl(String youtubeUrl) {
+
+        StringBuilder filePath = new StringBuilder("tmp/");
+
+        //execute python code for downloading youtube video by its url
+        ProcessBuilder processBuilder = new ProcessBuilder("python3", "downloadYoutubeVideo.py", youtubeUrl);
+        processBuilder.redirectErrorStream(true); // Merge stderr with stdout
+
+
+        Process process = null;
+        try {
+            process = processBuilder.start();
+
+            // Read and print the output from the Python script (stdout)
+            InputStream inputStream = process.getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                System.out.println("stdout: " + line);
+                filePath.append(line).append(".mp4");
+            }
+
+            // Wait for the Python process to complete
+            int exitCode = process.waitFor();
+            System.out.println("Process exited with code " + exitCode);
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (process != null) {
+                process.destroy();
+            }
+        }
+
+        //convert the file stored in tmp dir to a multipart file before uploading it to S3
+        Path path = Paths.get(String.valueOf(filePath));
+        try {
+            byte[] data = Files.readAllBytes(path);
+            System.out.println(String.valueOf(filePath));
+
+            MultipartFile multipartFile = new MockMultipartFile(
+                    String.valueOf(filePath),
+                    String.valueOf(filePath),
+                    "video/mp4",
+                    data);
+
+            return uploadVideo(multipartFile);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
     }
 }

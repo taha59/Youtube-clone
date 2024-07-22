@@ -33,3 +33,4 @@ build/
 .vscode/
 
 frontend/youtube-clone-ui/node
+tmp

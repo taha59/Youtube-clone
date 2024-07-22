@@ -3,13 +3,13 @@ package com.programming.taha.Youtubeclone.controller;
 import com.programming.taha.Youtubeclone.dto.CommentDto;
 import com.programming.taha.Youtubeclone.dto.UploadVideoResponse;
 import com.programming.taha.Youtubeclone.dto.VideoDto;
-import com.programming.taha.Youtubeclone.model.Video;
-import com.programming.taha.Youtubeclone.service.UserService;
+import com.programming.taha.Youtubeclone.dto.YoutubeUrlDto;
 import com.programming.taha.Youtubeclone.service.VideoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
 
 import java.util.List;
 
@@ -19,7 +19,6 @@ import java.util.List;
 public class VideoController {
 
     private final VideoService videoService;
-    private final UserService userService;
 
     //endpoint for uploading a video
     @PostMapping
@@ -87,4 +86,12 @@ public class VideoController {
     public List<VideoDto> getAllVideos(){
         return videoService.getAllVideos();
     }
+
+    @PostMapping("upload-by-url")
+    @ResponseStatus(HttpStatus.OK)
+    public UploadVideoResponse uploadByYoutubeUrl(@RequestBody YoutubeUrlDto youtubeUrlDto) {
+        System.out.println(youtubeUrlDto.getYoutubeUrl());
+        return videoService.uploadByYoutubeUrl(youtubeUrlDto.getYoutubeUrl());
+    }
+
 }

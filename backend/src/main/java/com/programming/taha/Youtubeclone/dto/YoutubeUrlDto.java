@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UploadVideoResponse {
-    private String videoId;
-    private String videoUrl;
+public class YoutubeUrlDto {
+    private String youtubeUrl;
 }
