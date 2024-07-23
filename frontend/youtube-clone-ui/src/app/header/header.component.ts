@@ -1,6 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
+import { VideoService } from '../video.service';
 
 @Component({
   selector: 'app-header',
@@ -11,8 +12,8 @@ import { OidcSecurityService } from 'angular-auth-oidc-client';
 
 export class HeaderComponent implements OnInit{
 
+  private readonly videoService = inject(VideoService)
   private readonly oidcSecurityService = inject(OidcSecurityService)
-  private readonly router = inject(Router)
   isAuthenticated: boolean = false
 
   constructor(){}
@@ -36,5 +37,14 @@ export class HeaderComponent implements OnInit{
       this.oidcSecurityService.logoffLocal();
     });
 
+  }
+
+  deleteAllVideos(){
+    
+    this.videoService.deleteAllVideos().subscribe(() =>
+      {
+        console.log("all videos deleted")
+      }
+    )
   }
 }

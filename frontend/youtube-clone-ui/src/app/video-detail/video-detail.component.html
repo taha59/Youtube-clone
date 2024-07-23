@@ -26,7 +26,7 @@
         <mat-card-header>
           <div mat-card-avatar class="example-header-image"></div>
           <mat-card-title>{{userName}}</mat-card-title>
-          <mat-card-subtitle class="subtitles">4.2K Subscribers</mat-card-subtitle>
+          <mat-card-subtitle class="subtitles">{{subscriberCount}} Subscribers</mat-card-subtitle>
           <button *ngIf="!isSubscribed" class="subscribe-button" mat-raised-button color="warn" 
           (click)="subscribeToUser()">SUBSCRIBE
           </button>

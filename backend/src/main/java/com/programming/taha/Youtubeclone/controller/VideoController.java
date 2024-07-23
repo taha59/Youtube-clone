@@ -22,8 +22,8 @@ public class VideoController {
     //endpoint for uploading a video
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UploadVideoResponse uploadVideo(@RequestParam("file") MultipartFile file){
-        return videoService.uploadVideo(file, "", "");
+    public UploadVideoResponse uploadVideo(@RequestParam("file") MultipartFile file, @RequestParam("userId") String userId){
+        return videoService.uploadVideo(file, "", userId);
     }
 
     //endpoint for uploading thumbnail

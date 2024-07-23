@@ -24,6 +24,7 @@ export class VideoDetailComponent implements OnInit {
   viewCount: number = 0
   userId: string = ""
   userName: string = ""
+  subscriberCount: number = 0
 
   isSubscribed: boolean = false
 
@@ -41,8 +42,11 @@ export class VideoDetailComponent implements OnInit {
         this.viewCount = data.viewCount
         this.userId = data.userId
 
+        // update the subscribe status for the current user
         this.userService.getUpdatedUser().subscribe(currUser =>{
+          this.subscriberCount = currUser.subscribedToUsers.length
           this.isSubscribed = currUser.subscribedToUsers.includes(data.userId)
+
           this.userService.getTargetUser(data.userId).subscribe(targetUser => {
             this.userName = targetUser.firstName
           })
