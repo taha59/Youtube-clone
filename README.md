@@ -8,6 +8,7 @@ Full stack youtube clone application that uploads videos to AWS S3 service and s
 - **MongoDB Community server**
 - **AWS account with s3 bucket set up**
 - **AWS CLI**
+- **pytubefix**
 
 ## Set up SSO
 ```aws configure sso```
